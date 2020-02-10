@@ -6,25 +6,25 @@ using Keepr.Repositories;
 
 namespace Keepr.Services
 {
-  public class KeepsService
+  public class VaultsService
   {
-    private readonly KeepsRepository _repo;
-    public KeepsService(KeepsRepository repo)
+    private readonly VaultsRepository _repo;
+    public VaultsService(VaultsRepository repo)
     {
       _repo = repo;
     }
-    public IEnumerable<Keep> Get()
+    public IEnumerable<Vault> Get(string userId)
     {
-      return _repo.Get();
+      return _repo.Get(userId);
     }
 
-    public Keep Create(Keep newKeep)
+    public Vault Create(Vault newVault)
     {
-      var newerKeep = _repo.Create(newKeep);
-      return newerKeep;
+      var newerVault = _repo.Create(newVault);
+      return newerVault;
     }
 
-    internal Keep GetById(int id)
+    internal Vault GetById(int id)
     {
       var exists = _repo.GetById(id);
       if (exists == null)
@@ -43,13 +43,13 @@ namespace Keepr.Services
       }
       else if (userId != exists.UserId)
       {
-        throw new Exception("You do not own this Keep peasant!");
+        throw new Exception("You do not own this Vault peasant!");
       }
       _repo.Delete(id);
       return "Successfully Destroyed";
     }
 
-    internal string Edit(Keep update)
+    internal string Edit(Vault update)
     {
       var exists = GetById(update.Id);
       if (exists == null)
@@ -58,7 +58,7 @@ namespace Keepr.Services
       }
       else if (update.UserId != exists.UserId)
       {
-        throw new Exception("You do not own this Keep peasant!");
+        throw new Exception("You do not own this Vault peasant!");
       }
       _repo.Edit(update);
       return "Successfully Updated";
