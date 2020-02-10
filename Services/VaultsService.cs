@@ -24,19 +24,23 @@ namespace Keepr.Services
       return newerVault;
     }
 
-    internal Vault GetById(int id)
+    internal Vault GetById(int id, string userId)
     {
       var exists = _repo.GetById(id);
       if (exists == null)
       {
-        throw new Exception("Invalid id");
+        throw new Exception("That is not a vault id plebian.");
+      }
+      else if (userId != exists.UserId)
+      {
+        throw new Exception("You don't own any vaults or are not logged in.");
       }
       return exists;
     }
 
     internal string Delete(int id, string userId)
     {
-      var exists = GetById(id);
+      var exists = GetById(id, userId);
       if (exists == null)
       {
         throw new Exception("Invalid id");
@@ -51,7 +55,7 @@ namespace Keepr.Services
 
     internal string Edit(Vault update)
     {
-      var exists = GetById(update.Id);
+      var exists = GetById(update.Id, update.UserId);
       if (exists == null)
       {
         throw new Exception("Invalid id");
