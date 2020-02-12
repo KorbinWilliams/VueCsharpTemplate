@@ -15,10 +15,10 @@ namespace Keepr.Repositories
       _db = db;
     }
 
-    internal IEnumerable<Keep> Get()
+    internal IEnumerable<Keep> Get(string userId)
     {
-      string sql = "SELECT * FROM Keeps WHERE isPrivate = 0;";
-      return _db.Query<Keep>(sql);
+      string sql = "IF isPrivate = 0 OR userId = @UserId SELECT * FROM keeps END IF";
+      return _db.Query<Keep>(sql, userId);
     }
 
     internal Keep GetById(int id)

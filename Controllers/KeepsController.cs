@@ -21,11 +21,13 @@ namespace Keepr.Controllers
       _ks = ks;
     }
     [HttpGet]
+    [Authorize]
     public ActionResult<IEnumerable<Keep>> Get()
     {
       try
       {
-        return Ok(_ks.Get());
+        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        return Ok(_ks.Get(userId));
       }
       catch (Exception e)
       {

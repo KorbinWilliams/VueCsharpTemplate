@@ -16,19 +16,22 @@ namespace Keepr.Controllers
   public class VaultKeepsController : ControllerBase
   {
     private readonly VaultKeepsService _vks;
-    public VaultKeepsController(VaultKeepsService vks)
+    private readonly VaultsService _vs;
+    public VaultKeepsController(VaultKeepsService vks, VaultsService vs)
     {
       _vks = vks;
+      _vs = vs;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{vaultId}/keeps")]
     [Authorize]
-    public ActionResult<VaultKeep> GetById(int id)
+    public ActionResult<IEnumerable<Keep>> GetKeepsByVaultId(int vaultId)
     {
       try
       {
         var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        return _vks.GetById(id, userId);
+        Vault vault = _vs.GetById(vaultId, userId);
+        return Ok(_vks.GetKeepsByVaultId(vault));
       }
       catch (Exception e)
       {
@@ -53,15 +56,15 @@ namespace Keepr.Controllers
       }
     }
 
-    [HttpDelete]
+    [HttpDelete("{vaultId}/keeps/{keepId}")]
     [Authorize]
-    public ActionResult<String> Delete([FromBody] VaultKeep vk)
+    public ActionResult<String> Delete([FromBody] int vaultId, int keepId)
     {
       try
       {
+        // getting 415 maybe drop tables?
         var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        vk.UserId = userId;
-        return Ok(_vks.Delete(vk));
+        return Ok(_vks.Delete(vaultId, keepId, userId));
       }
       catch (Exception e)
       {

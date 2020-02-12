@@ -19,40 +19,40 @@ namespace Keepr.Services
       VaultKeep exists = _repo.GetById(newData.Id);
       if (exists != null)
       {
-        throw new Exception("Student already enrolled");
+        throw new Exception("Relationship already exists");
       }
       // Pretty sure I don't need this on create...
       // else if (exists.UserId != newData.UserId)
       // {
-      //   throw new Exception("No eres este estudiante.");
+      //   throw new Exception("");
       // }
       _repo.Create(newData);
     }
 
-    internal VaultKeep GetById(int id, string userId)
+    internal IEnumerable<Keep> GetKeepsByVaultId(Vault vault)
     {
-      VaultKeep exists = _repo.GetById(id);
-      if (exists == null)
-      {
-        throw new Exception("This is not the VaultKeep you are looking for");
-      }
-      else if (exists.UserId != userId)
-      {
-        throw new Exception("Get yer own VaultKeep ya ninnie!");
-      }
+      var exists = _repo.GetKeepsByVaultId(vault);
+      // if (exists == null)
+      // {
+      //   throw new Exception("This is not the VaultKeep you are looking for");
+      // }
+      // else if (exists.UserId != userId)
+      // {
+      //   throw new Exception("Get yer own VaultKeep ya ninnie!");
+      // }
       return exists;
     }
 
-    internal string Delete(VaultKeep vk)
+    internal string Delete(int keepId, int vaultId, string userId)
     {
-      VaultKeep exists = _repo.GetById(vk.Id);
+      VaultKeep exists = _repo.FindByIds(keepId, vaultId);
       if (exists == null)
       {
         throw new Exception("Invalid Id Combination");
       }
-      else if (exists.UserId != vk.UserId)
+      else if (exists.UserId != userId)
       {
-        throw new Exception("No eres este estudiante.");
+        throw new Exception("No tienes estes");
       }
       _repo.Delete(exists.Id);
       return "Successfully Deleted";
