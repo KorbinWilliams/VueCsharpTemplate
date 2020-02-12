@@ -20,9 +20,12 @@ export default new Vuex.Store({
     activeKeeps: [],
     vaults: [],
     activeVault: {}
-    // do I need vaultkeeps??? I don't think so.
+    // do I need vaultkeeps??? I don't think so. Screw sql
   },
   mutations: {
+    addItem(state, payload) {
+      state[payload.address].push(payload.data);
+    },
     setItem(state, payload) {
       state[payload.address] = payload.data;
     },

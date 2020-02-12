@@ -1,5 +1,5 @@
 <template>
-  <div class="keep">
+  <div class="keep keep-text">
     <h3>{{keepData.name}}</h3>
     <img type="button" :src="keepData.img" alt="keep image" />
     <h5>{{keepData.description}}</h5>
@@ -27,4 +27,7 @@ export default {
 </script>
 
 <style>
+.keep-text {
+  color: whitesmoke;
+}
 </style>

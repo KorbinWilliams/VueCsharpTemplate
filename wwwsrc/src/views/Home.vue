@@ -1,13 +1,30 @@
 <template>
-  <div class="home container-fluid">
+  <div class="home container-fluid bg-main">
     <div class="row">
       <div class="col text-center">
-        <h1>Home</h1>
+        <h1 class="home-title">Home</h1>
       </div>
     </div>
     <div class="row">
-      <div class="col-3">
+      <div class="col-3 text-white">
         <p>This is where the filters will go</p>
+        <div class="createKeep">
+          <p>Create your own keep.</p>
+          <div class="form-group">
+            <label class="text-center" for="newKeep">Image</label>
+            <input type="text" v-model="newKeep.img" class="form-control" placeholder="img" />
+            <label class="text-center" for="newKeep">Title</label>
+            <input type="text" v-model="newKeep.name" class="form-control" placeholder="title" />
+            <label class="text-center" for="newKeep">Description</label>
+            <input
+              type="text"
+              v-model="newKeep.description"
+              class="form-control"
+              placeholder="description"
+            />
+            <button class="btn-submit" @click="createKeep">Submit</button>
+          </div>
+        </div>
       </div>
       <div class="col-9">
         <div class="row">
@@ -30,6 +47,15 @@ export default {
       commitAddress: "publicKeeps"
     });
   },
+  data() {
+    return {
+      newKeep: {
+        name: "",
+        description: "",
+        img: ""
+      }
+    };
+  },
   computed: {
     user() {
       return this.$store.state.user;
@@ -41,6 +67,22 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch("logout");
+    },
+    createKeep() {
+      if (this.newKeep.img.length < 5) {
+        this.newKeep.img = "http://placehold.it/200x200";
+      }
+      this.$store.dispatch("create", {
+        address: "keeps",
+        data: this.newKeep,
+        commit: "addItem",
+        commitAddress: "publicKeeps"
+      });
+      this.newKeep = {
+        name: "",
+        description: "",
+        img: ""
+      };
     }
   },
   components: {
@@ -48,3 +90,20 @@ export default {
   }
 };
 </script>
+<style>
+.bg-main {
+  background-color: #011640;
+}
+.home-title {
+  color: whitesmoke;
+  text-shadow: 2px 2px rgb(46, 129, 97);
+}
+.createKeep {
+  background-color: #3e7c71;
+  padding: 0, 2rem, 0, 2rem;
+}
+.btn-submit {
+  background-color: #011640;
+  color: whitesmoke;
+}
+</style>
