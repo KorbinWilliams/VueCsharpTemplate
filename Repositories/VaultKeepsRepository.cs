@@ -15,15 +15,27 @@ namespace Keepr.Repositories
       _db = db;
     }
 
-    internal IEnumerable<Keep> Get()
+    internal VaultKeep Create(VaultKeep newVK)
     {
-      string sql = "SELECT * FROM VaultKeeps WHERE isPrivate = 0;";
-      return _db.Query<Keep>(sql);
+      string sql = @"
+        INSERT INTO vaultkeeps (vaultId, keepId)
+        VALUES (@VaultId, @KeepId);
+        SELECT LAST_INSERT_ID();";
+      int id = _db.ExecuteScalar<int>(sql, newVK);
+      newVK.Id = id;
+      return newVK;
     }
 
-    internal int Create(Keep KeepData)
+    internal VaultKeep GetById(int id)
     {
-      throw new NotImplementedException();
+      string sql = @"SELECT * FROM vaultkeeps WHERE id = @id";
+      return _db.QueryFirstOrDefault(sql, new { id });
+    }
+
+    internal void Delete(int id)
+    {
+      string sql = @"DELETE FROM vaultkeeps WHERE id = @id";
+      _db.Execute(sql, new { id });
     }
   }
 }

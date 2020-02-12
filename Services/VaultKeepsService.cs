@@ -13,15 +13,50 @@ namespace Keepr.Services
     {
       _repo = repo;
     }
-    public IEnumerable<Keep> Get()
+
+    internal void Create(VaultKeep newData)
     {
-      return _repo.Get();
+      VaultKeep exists = _repo.GetById(newData.Id);
+      if (exists != null)
+      {
+        throw new Exception("Student already enrolled");
+      }
+      // Pretty sure I don't need this on create...
+      // else if (exists.UserId != newData.UserId)
+      // {
+      //   throw new Exception("No eres este estudiante.");
+      // }
+      _repo.Create(newData);
     }
 
-    public Keep Create(Keep newKeep)
+    internal VaultKeep GetById(int id, string userId)
     {
-      newKeep.Id = _repo.Create(newKeep);
-      return newKeep;
+      VaultKeep exists = _repo.GetById(id);
+      if (exists == null)
+      {
+        throw new Exception("This is not the VaultKeep you are looking for");
+      }
+      else if (exists.UserId != userId)
+      {
+        throw new Exception("Get yer own VaultKeep ya ninnie!");
+      }
+      return exists;
+    }
+
+    internal string Delete(VaultKeep vk)
+    {
+      VaultKeep exists = _repo.GetById(vk.Id);
+      if (exists == null)
+      {
+        throw new Exception("Invalid Id Combination");
+      }
+      else if (exists.UserId != vk.UserId)
+      {
+        throw new Exception("No eres este estudiante.");
+      }
+      _repo.Delete(exists.Id);
+      return "Successfully Deleted";
     }
   }
 }
+

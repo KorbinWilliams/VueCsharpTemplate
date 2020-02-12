@@ -1,15 +1,15 @@
 namespace Keepr.Models
 {
-  class VaultKeep
+  public class VaultKeep
   {
     public VaultKeep()
     { }
-    int Id { get; set; }
+    public int Id { get; set; }
 
-    int VaultId { get; set; }
+    public int VaultId { get; set; }
 
-    int KeepId { get; set; }
+    public int KeepId { get; set; }
 
-    int UserId { get; set; }
+    public string UserId { get; set; }
   }
 }

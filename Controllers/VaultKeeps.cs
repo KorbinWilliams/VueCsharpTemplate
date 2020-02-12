@@ -20,28 +20,48 @@ namespace Keepr.Controllers
     {
       _vks = vks;
     }
-    [HttpGet]
-    public ActionResult<IEnumerable<Keep>> Get()
-    {
-      try
-      {
-        return Ok(_vks.Get());
-      }
-      catch (Exception e)
-      {
-        return BadRequest(e.Message);
-      };
-    }
 
-    [HttpPost]
+    [HttpGet("{id}")]
     [Authorize]
-    public ActionResult<Keep> Post([FromBody] Keep newKeep)
+    public ActionResult<VaultKeep> GetById(int id)
     {
       try
       {
         var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        newKeep.UserId = userId;
-        return Ok(_vks.Create(newKeep));
+        return _vks.GetById(id, userId);
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+
+    [HttpPost]
+    [Authorize]
+    public ActionResult<VaultKeep> Create([FromBody] VaultKeep newData)
+    {
+      try
+      {
+        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        newData.UserId = userId;
+        _vks.Create(newData);
+        return Ok("Success");
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+
+    [HttpDelete]
+    [Authorize]
+    public ActionResult<String> Delete([FromBody] VaultKeep vk)
+    {
+      try
+      {
+        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        vk.UserId = userId;
+        return Ok(_vks.Delete(vk));
       }
       catch (Exception e)
       {
@@ -50,3 +70,4 @@ namespace Keepr.Controllers
     }
   }
 }
+
