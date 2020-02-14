@@ -14,7 +14,7 @@
     <div class="list-group">
       <button type="button" class="list-group-item list-group-item-action active">Active item</button>
       <button type="button" class="list-group-item list-group-item-action">Item</button>
-      <button type="button" class="list-group-item list-group-item-action">Disabled item</button>
+      <button type="button" class="list-group-item list-group-item-action">Delete</button>
     </div>
   </div>
 </template>

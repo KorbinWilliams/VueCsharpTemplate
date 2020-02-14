@@ -21,19 +21,21 @@ namespace Keepr.Controllers
       _ks = ks;
     }
     [HttpGet]
-    [Authorize]
     public ActionResult<IEnumerable<Keep>> Get()
     {
       try
       {
-        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        return Ok(_ks.Get(userId));
+        // var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        return Ok(_ks.Get());
       }
       catch (Exception e)
       {
         return BadRequest(e.Message);
       };
     }
+
+
+    // Probably gonna need a get all for users private keeps
 
     [HttpGet("{id}")]
     public ActionResult<Keep> Get(int id)

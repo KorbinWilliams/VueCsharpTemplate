@@ -13,9 +13,9 @@ namespace Keepr.Services
     {
       _repo = repo;
     }
-    public IEnumerable<Keep> Get(string userId)
+    public IEnumerable<Keep> Get()
     {
-      var exists = _repo.Get(userId);
+      var exists = _repo.Get();
       if (exists == null)
       {
         throw new Exception("There are no keeps");

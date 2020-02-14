@@ -57,9 +57,9 @@ export default {
     };
   },
   computed: {
-    user() {
-      return this.$store.state.user;
-    },
+    // user() {
+    //   return this.$auth.user.;
+    // },
     keeps() {
       return this.$store.state.publicKeeps;
     }

@@ -1,14 +1,28 @@
 <template>
-  <div class="dashboard">
-    <h1>WELCOME TO THE DASHBOARD</h1>
+  <div class="dashboard container-fluid">
+    <div class="row">
+      <div class="col justify-content center">
+        <h1>{{this.$auth.userInfo.nickname}}'s Dashboard ssss</h1>
+      </div>
+    </div>
     public {{ publicKeeps }} user {{ userKeeps }}
   </div>
 </template>
 
 <script>
 export default {
-  mounted() {},
-  computed: {}
+  mounted() {
+    this.store.$state.dispatch("get", {
+      address: "vaults",
+      commit: "setItem",
+      commitAddress: "vaults"
+    });
+  },
+  computed: {
+    vaults() {
+      return this.store.$state.vaults;
+    }
+  }
 };
 </script>
 
