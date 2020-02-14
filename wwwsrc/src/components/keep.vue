@@ -12,9 +12,14 @@
       <span class="text-primary">Shares: {{keepData.shares}}</span>
     </p>
     <div class="list-group">
-      <button type="button" class="list-group-item list-group-item-action active">Active item</button>
+      <button type="button" class="list-group-item list-group-item-action">Move to vault</button>
       <button type="button" class="list-group-item list-group-item-action">Item</button>
-      <button type="button" class="list-group-item list-group-item-action">Delete</button>
+      <button
+        @mouseover="setActiveKeep()"
+        type="button"
+        class="list-group-item list-group-item-action"
+        @click="deleteKeep"
+      >Delete</button>
     </div>
   </div>
 </template>
@@ -22,7 +27,34 @@
 <script>
 export default {
   name: "Keep",
-  props: ["keepData"]
+  props: ["keepData"],
+  data() {
+    return {
+      inActiveKeep: false
+    };
+  },
+  methods: {
+    setActiveKeep() {
+      this.$store.dispatch("setActive", {
+        data: this.keepData,
+        commitAddress: "activeKeep",
+        commit: "setItem"
+      });
+    },
+    deleteKeep() {
+      let keep = this.$store.state.activeKeep;
+      console.log(keep);
+      // this.inActiveCheck();
+      if (this.inActiveKeep == false) {
+        this.$store.dispatch("delete", {
+          address: "keeps",
+          data: keep,
+          commit: "removeItem",
+          commitAddress: "publicKeeps"
+        });
+      }
+    }
+  }
 };
 </script>
 

@@ -93,6 +93,8 @@ export default {
 <style>
 .bg-main {
   background-color: #011640;
+  background-size: cover;
+  height: 100vh;
 }
 .home-title {
   color: whitesmoke;

@@ -17,7 +17,7 @@
               @click="setActiveVault(vault)"
             >{{vault.name}}: {{vault.description}}</p>
             <br />
-            <button class="btn btn-danger">Delete {{vault.name}}</button>
+            <button class="btn btn-danger" @click="deleteVault(vault)">Delete {{vault.name}}</button>
           </div>
         </div>
         <div class="form-group">
@@ -98,6 +98,26 @@ export default {
             commitAddress: "activeKeeps"
           })
         );
+    },
+    deleteVault(vault) {
+      console.log(vault);
+      this.$store
+        .dispatch("delete", {
+          address: "vaults",
+          data: vault,
+          commit: "removeItem",
+          commitAddress: "vaults"
+        })
+        .then(res =>
+          setTimeout(
+            this.$store.dispatch("get", {
+              address: "vaults",
+              commit: "setItem",
+              commitAddress: "vaults"
+            }),
+            2000
+          )
+        );
     }
   },
   computed: {
@@ -115,8 +135,15 @@ export default {
 </script>
 
 <style scoped>
+html,
+body {
+  height: 100vh;
+  width: 100vw;
+}
 .main {
   background-color: #011640;
+  background-size: cover;
+  height: 100vh;
 }
 .vaults {
   background-color: #3e7c71;

@@ -17,6 +17,8 @@ export default new Vuex.Store({
   state: {
     publicKeeps: [],
     // for viewing your vaults
+    activeKeep: {},
+    // just for the f***ing delete
     activeKeeps: [],
     vaults: [],
     activeVault: {}
@@ -30,11 +32,12 @@ export default new Vuex.Store({
       state[payload.address] = payload.data;
     },
     removeItem(state, payload) {
-      state[payload.address].filter(item => item._id = payload.data._id)
+      state[payload.address].filter(item => item.id == payload.data.id)
     },
     resetState(state) {
       state = {
         publicKeeps: [],
+        activeKeep: {},
         activeKeeps: [],
         vaults: [],
         activeVault: {}
@@ -65,7 +68,7 @@ export default new Vuex.Store({
     },
     getOne({ commit }, payload) {
       api
-        .get("" + payload.address + "/" + payload.data._id)
+        .get("" + payload.address + "/" + payload.data.id)
         .then(res => {
           commit(payload.commit, {
             data: res.data,
@@ -81,7 +84,7 @@ export default new Vuex.Store({
           "" +
           payload.address1 +
           "/" +
-          payload.data._id +
+          payload.data.id +
           "/" +
           payload.address2
         )
@@ -106,7 +109,7 @@ export default new Vuex.Store({
     edit({ commit }, payload) {
       api
         .put(
-          "" + payload.address + "/" + payload.data._id || payload._id,
+          "" + payload.address + "/" + payload.data.id || payload.id,
           payload.data
         )
         .then(res => {
@@ -118,7 +121,7 @@ export default new Vuex.Store({
         .catch(e => console.error(e));
     },
     delete({ commit }, payload) {
-      api.delete("" + payload.address + "/" + payload.data._id).then(res => {
+      api.delete("" + payload.address + "/" + payload.data.id).then(res => {
         commit(payload.commit, {
           data: res.data,
           address: payload.commitAddress
