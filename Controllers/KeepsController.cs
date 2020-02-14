@@ -34,6 +34,20 @@ namespace Keepr.Controllers
       };
     }
 
+    [HttpGet("mine")]
+    [Authorize]
+    public ActionResult<IEnumerable<Keep>> GetMyKeeps()
+    {
+      try
+      {
+        var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        return Ok(_ks.GetMyKeeps(userId));
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      };
+    }
 
     // Probably gonna need a get all for users private keeps
 

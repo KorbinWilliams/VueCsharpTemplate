@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <div class="col-3 text-white">
-        <p>This is where the filters will go</p>
+        <!-- <p>This is where the filters will go</p> -->
         <div class="createKeep">
           <p>Create your own keep.</p>
           <div class="form-group">
@@ -22,13 +22,26 @@
               class="form-control"
               placeholder="description"
             />
+            <label class="text-center" for="newKeep">Private</label>
+            <input
+              type="text"
+              v-model="booleon.istPrivate"
+              class="form-control"
+              placeholder="Is it private? (yes or no)."
+            />
             <button class="btn-submit" @click="createKeep">Submit</button>
           </div>
         </div>
       </div>
       <div class="col-9">
         <div class="row">
-          <keep class="col-3" v-for="keep in keeps" :key="keep.id" :keepData="keep" />
+          <keep
+            class="col-3"
+            v-for="keep in keeps"
+            :key="keep.id"
+            :keepData="keep"
+            v-show="keep.isPrivate == false"
+          />
         </div>
       </div>
     </div>
@@ -52,7 +65,11 @@ export default {
       newKeep: {
         name: "",
         description: "",
-        img: ""
+        img: "",
+        isPrivate: false
+      },
+      booleon: {
+        istPrivate: ""
       }
     };
   },
@@ -71,6 +88,9 @@ export default {
     createKeep() {
       if (this.newKeep.img.length < 5) {
         this.newKeep.img = "http://placehold.it/200x200";
+      }
+      if (this.booleon.istPrivate == "yes") {
+        this.newKeep.isPrivate = true;
       }
       this.$store.dispatch("create", {
         address: "keeps",

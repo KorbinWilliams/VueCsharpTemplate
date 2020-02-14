@@ -5,17 +5,19 @@
         <h1 class="text-white">{{this.$auth.userInfo.nickname}}'s Dashboard</h1>
       </div>
     </div>
+    <div class="row text-white">
+      <div class="col-12 d-flex justify-content-center">
+        <h2 v-show="myKeepsToggle == 1">vault keeps</h2>
+        <h2 v-show="myKeepsToggle == 2">my keeps</h2>
+        <h2 v-show="myKeepsToggle == 3">public keeps</h2>
+      </div>
+    </div>
     <div class="row">
       <div class="col-2 vaults">
-        <!-- vaults here on click display keeps in next col-->
-        <!-- might put button here for v-show myKeeps vs. vaultKeeps -->
         <div>
           <div v-for="vault in vaults" :key="vault._id">
             <br />
-            <p
-              class="btn vaultBtn"
-              @click="setActiveVault(vault)"
-            >{{vault.name}}: {{vault.description}}</p>
+            <p class="btn vaultBtn" @click="setActiveVault(vault)">{{vault.name}}</p>
             <br />
             <button class="btn btn-danger" @click="deleteVault(vault)">Delete {{vault.name}}</button>
           </div>
@@ -29,23 +31,48 @@
             class="form-control"
             placeholder="Description"
           />
-          <button @click="createVault">Submit</button>
+          <button class="sBtn" @click="createVault">Submit</button>
+          <button class="bBtn" @click="toggleKeeps">Toggle keeps</button>
         </div>
       </div>
-      <div class="col-2">
-        <!-- FIXME this col is a temporary offset -->
+      <div class="col-2 text-white">
+        <h1 class="d-flex justify-content-center">{{this.$store.state.activeVault.name}}</h1>
+        <p>{{this.$store.state.activeVault.name}}</p>
       </div>
       <div class="col-8">
         <div class="row">
-          <div class="col">
-            <!-- active keepS AND OR myKeeps -->
-            <keep v-for="activeKeep in activeKeeps" :key="activeKeep._id" />
-          </div>
+          <!-- <div class="col-2"> -->
+          <!-- active keepS AND OR myKeeps -->
+          <keep
+            class="col-2"
+            v-for="activeKeep in activeKeeps"
+            :key="activeKeep._id"
+            :keepData="activeKeep"
+            v-show="myKeepsToggle == 1"
+          />
+          <!-- </div> -->
         </div>
         <div class="row">
-          <div class="col">
-            <!-- active keep -->
-          </div>
+          <!-- <div class="col-2"> -->
+          <keep
+            class="col-2 offset-1"
+            v-for="mykeep in mykeeps"
+            :key="mykeep.id"
+            :keepData="mykeep"
+            v-show="myKeepsToggle == 2"
+          />
+          <!-- </div> -->
+        </div>
+        <div class="row">
+          <!-- <div class="col-2"> -->
+          <keep
+            class="col-2 offset-1"
+            v-for="publicKeep in publicKeeps"
+            :key="publicKeep.id"
+            :keepData="publicKeep"
+            v-show="myKeepsToggle == 3"
+          />
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -64,13 +91,19 @@ export default {
       commit: "setItem",
       commitAddress: "vaults"
     });
+    this.$store.dispatch("get", {
+      address: "keeps/mine",
+      commit: "setItem",
+      commitAddress: "myKeeps"
+    });
   },
   data() {
     return {
       newVault: {
         name: "",
         description: ""
-      }
+      },
+      myKeepsToggle: 1
     };
   },
   methods: {
@@ -90,13 +123,15 @@ export default {
           commit: "setItem"
         })
         .then(res =>
-          this.$store.dispatch("getOneByAnother", {
-            address1: "vaultkeeps",
-            address2: "keeps",
-            data: this.$store.state.activeVault,
-            commit: "setItem",
-            commitAddress: "activeKeeps"
-          })
+          setTimeout(
+            this.$store.dispatch("getOneByAnother", {
+              address1: "vaultkeeps",
+              address2: "keeps",
+              commit: "setItem",
+              commitAddress: "activeKeeps"
+            }),
+            3000
+          )
         );
     },
     deleteVault(vault) {
@@ -118,6 +153,29 @@ export default {
             2000
           )
         );
+    },
+    toggleKeeps() {
+      this.$store.dispatch("getOneByAnother", {
+        address1: "vaultkeeps",
+        address2: "keeps",
+        commit: "setItem",
+        commitAddress: "activeKeeps"
+      });
+      if (this.myKeepsToggle == 1) {
+        this.myKeepsToggle = 2;
+      } else if (this.myKeepsToggle == 2) {
+        this.myKeepsToggle = 3;
+      } else {
+        this.myKeepsToggle = 1;
+      }
+    },
+    getKeeps() {
+      this.$store.dispatch("getOneByAnother", {
+        address1: "vaultkeeps",
+        address2: "keeps",
+        commit: "setItem",
+        commitAddress: "activeKeeps"
+      });
     }
   },
   computed: {
@@ -126,6 +184,12 @@ export default {
     },
     activeKeeps() {
       return this.$store.state.activeKeeps;
+    },
+    mykeeps() {
+      return this.$store.state.myKeeps;
+    },
+    publicKeeps() {
+      return this.$store.state.publicKeeps;
     }
   },
   components: {
@@ -157,5 +221,11 @@ body {
   border-radius: 2px;
   border-color: black;
   text-shadow: 1px 1px rgb(38, 0, 255);
+}
+.bBtn {
+  margin-top: 2rem;
+}
+.sBtn {
+  margin-top: 1.25rem;
 }
 </style>

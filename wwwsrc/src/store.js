@@ -20,6 +20,7 @@ export default new Vuex.Store({
     activeKeep: {},
     // just for the f***ing delete
     activeKeeps: [],
+    myKeeps: [],
     vaults: [],
     activeVault: {}
     // do I need vaultkeeps??? I don't think so. Screw sql
@@ -34,11 +35,19 @@ export default new Vuex.Store({
     removeItem(state, payload) {
       state[payload.address].filter(item => item.id == payload.data.id)
     },
+    changeItem(state, payload) {
+      state[payload.address].filter(item => item.id == payload.data.id)
+      if (!state[payload.address].find(i => i.id == payload.data.id)) {
+        payload.address = state.myKeeps
+      }
+      state[payload.address].push(payload.data)
+    },
     resetState(state) {
       state = {
         publicKeeps: [],
         activeKeep: {},
         activeKeeps: [],
+        myKeeps: [],
         vaults: [],
         activeVault: {}
       }
@@ -84,11 +93,12 @@ export default new Vuex.Store({
           "" +
           payload.address1 +
           "/" +
-          payload.data.id +
+          this.state.activeVault.id +
           "/" +
           payload.address2
         )
         .then(res => {
+          console.log(res.data)
           commit(payload.commit, {
             data: res.data,
             address: payload.commitAddress
@@ -133,6 +143,17 @@ export default new Vuex.Store({
         data: payload.data,
         address: payload.commitAddress
       })
+    },
+    async createVaultKeep({ commit }, vaultKeep) {
+      try {
+        await api.post("vaultKeeps", vaultKeep);
+        // commit("setItem", {
+        //   data: res.data,
+        //   address: "activeKeeps"
+        // })
+      } catch (error) {
+        console.error(error);
+      }
     }
   }
 });

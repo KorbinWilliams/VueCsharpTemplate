@@ -54,6 +54,16 @@ namespace Keepr.Services
       return "Successfully Destroyed";
     }
 
+    internal IEnumerable<Keep> GetMyKeeps(string userId)
+    {
+      var exists = _repo.GetMyKeeps(userId);
+      if (exists == null)
+      {
+        throw new Exception("You have no keeps");
+      }
+      return exists;
+    }
+
     internal string Edit(Keep update)
     {
       var exists = GetById(update.Id);
