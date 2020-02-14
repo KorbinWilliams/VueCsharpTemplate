@@ -64,9 +64,13 @@ export default {
 }
 .btn-login {
   background-color: #04d9b2;
+  color: white;
+  text-shadow: 2px 2px black;
 }
 .btn-logout {
   background-color: #022840;
+  color: white;
+  text-shadow: 2px 2px black;
 }
 </style>
 // red #F20505 darkblue #011640 alsodarkbluebutwithgreysorta #022840
