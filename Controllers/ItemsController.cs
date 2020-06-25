@@ -13,20 +13,20 @@ namespace Keepr.Controllers
 {
   [ApiController]
   [Route("api/[controller]")]
-  public class KeepsController : ControllerBase
+  public class ItemsController : ControllerBase
   {
-    private readonly KeepsService _ks;
-    public KeepsController(KeepsService ks)
+    private readonly ItemsService _its;
+    public ItemsController(ItemsService its)
     {
-      _ks = ks;
+      _its = its;
     }
     [HttpGet]
-    public ActionResult<IEnumerable<Keep>> Get()
+    public ActionResult<IEnumerable<Item>> Get()
     {
       try
       {
         // var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        return Ok(_ks.Get());
+        return Ok(_its.Get());
       }
       catch (Exception e)
       {
@@ -36,12 +36,12 @@ namespace Keepr.Controllers
 
     [HttpGet("mine")]
     [Authorize]
-    public ActionResult<IEnumerable<Keep>> GetMyKeeps()
+    public ActionResult<IEnumerable<Item>> GetMyItems()
     {
       try
       {
         var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        return Ok(_ks.GetMyKeeps(userId));
+        return Ok(_its.GetMyItems(userId));
       }
       catch (Exception e)
       {
@@ -49,14 +49,14 @@ namespace Keepr.Controllers
       };
     }
 
-    // Probably gonna need a get all for users private keeps
+    // Probably gonna need a get all for users private Items
 
     [HttpGet("{id}")]
-    public ActionResult<Keep> Get(int id)
+    public ActionResult<Item> Get(int id)
     {
       try
       {
-        return Ok(_ks.GetById(id));
+        return Ok(_its.GetById(id));
       }
       catch (Exception e)
       {
@@ -66,13 +66,13 @@ namespace Keepr.Controllers
 
     [HttpPost]
     [Authorize]
-    public ActionResult<Keep> Post([FromBody] Keep newKeep)
+    public ActionResult<Item> Post([FromBody] Item newItem)
     {
       try
       {
         var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        newKeep.UserId = userId;
-        return Ok(_ks.Create(newKeep));
+        newItem.UserId = userId;
+        return Ok(_its.Create(newItem));
       }
       catch (Exception e)
       {
@@ -82,13 +82,13 @@ namespace Keepr.Controllers
 
     [HttpPut("{id}")]
     [Authorize]
-    public ActionResult<Keep> Put([FromBody] Keep update)
+    public ActionResult<Item> Put([FromBody] Item update)
     {
       try
       {
         var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         update.UserId = userId;
-        return Ok(_ks.Edit(update));
+        return Ok(_its.Edit(update));
       }
       catch (Exception e)
       {
@@ -103,7 +103,7 @@ namespace Keepr.Controllers
       try
       {
         var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        return Ok(_ks.Delete(id, userId));
+        return Ok(_its.Delete(id, userId));
       }
       catch (Exception e)
       {

@@ -6,52 +6,52 @@ using Dapper;
 
 namespace Keepr.Repositories
 {
-  public class KeepsRepository
+  public class ItemsRepository
   {
     private readonly IDbConnection _db;
 
-    public KeepsRepository(IDbConnection db)
+    public ItemsRepository(IDbConnection db)
     {
       _db = db;
     }
 
-    internal IEnumerable<Keep> Get()
+    internal IEnumerable<Item> Get()
     {
       // string sql = "IF isPrivate = 0 OR userId = @UserId SELECT * FROM keeps END IF";
-      string sql = @"SELECT * FROM keeps WHERE isPrivate = 0";
-      return _db.Query<Keep>(sql);
+      string sql = @"SELECT * FROM items WHERE isPrivate = 0";
+      return _db.Query<Item>(sql);
     }
 
-    internal Keep GetById(int id)
+    internal Item GetById(int id)
     {
-      string sql = @"SELECT * FROM keeps WHERE id = @id";
-      return _db.QueryFirstOrDefault<Keep>(sql, new { id });
+      string sql = @"SELECT * FROM items WHERE id = @id";
+      return _db.QueryFirstOrDefault<Item>(sql, new { id });
     }
 
-    internal Keep Create(Keep KeepData)
+    internal Item Create(Item ItemData)
     {
-      string sql = @"INSERT INTO keeps (userId, name, description, img, isPrivate, views, shares, keeps) VALUES (@UserId, @Name, @Description, @Img, @IsPrivate, @Views, @Shares, @Keeps);
+      string sql = @"INSERT INTO items (userId, name, description, img, isPrivate) VALUES (@UserId, @Name, @Description, @Img, @IsPrivate);
       SELECT LAST_INSERT_ID();";
-      int id = _db.ExecuteScalar<int>(sql, KeepData);
-      KeepData.Id = id;
-      return KeepData;
+      int id = _db.ExecuteScalar<int>(sql, ItemData);
+      ItemData.Id = id;
+      return ItemData;
     }
 
-    internal void Edit(Keep update)
+    internal void Edit(Item update)
     {
-      string sql = @"UPDATE keeps SET name = @Name, description = @Description, img = @img, isPrivate = @IsPrivate, views = @Views, shares = @Shares, keeps = @Keeps WHERE id = @Id";
+      string sql = @"UPDATE items SET name = @Name, description = @Description, img = @img, isPrivate = @IsPrivate, views = @Views, shares = @Shares, items = @Items WHERE id = @Id";
       _db.Execute(sql, update);
     }
 
-    internal IEnumerable<Keep> GetMyKeeps(string userId)
+    internal IEnumerable<Item> GetMyItems(string userId)
     {
-      string sql = @"SELECT * FROM keeps WHERE userId = @UserId";
-      return _db.Query<Keep>(sql, new { userId });
+      string sql = @"SELECT * FROM items WHERE userId = @UserId";
+      return _db.Query<Item>(sql, new { userId });
     }
 
     internal void Delete(int id)
     {
-      string sql = @"DELETE FROM keeps WHERE id = @id";
+      string sql = @"DELETE FROM items WHERE id = @id";
       _db.Execute(sql, new { id });
     }
 

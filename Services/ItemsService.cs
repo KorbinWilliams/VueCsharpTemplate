@@ -6,30 +6,30 @@ using Keepr.Repositories;
 
 namespace Keepr.Services
 {
-  public class KeepsService
+  public class ItemsService
   {
-    private readonly KeepsRepository _repo;
-    public KeepsService(KeepsRepository repo)
+    private readonly ItemsRepository _repo;
+    public ItemsService(ItemsRepository repo)
     {
       _repo = repo;
     }
-    public IEnumerable<Keep> Get()
+    public IEnumerable<Item> Get()
     {
       var exists = _repo.Get();
       if (exists == null)
       {
-        throw new Exception("There are no keeps");
+        throw new Exception("There are no items");
       }
       return exists;
     }
 
-    public Keep Create(Keep newKeep)
+    public Item Create(Item newItem)
     {
-      var newerKeep = _repo.Create(newKeep);
-      return newerKeep;
+      var newerItem = _repo.Create(newItem);
+      return newerItem;
     }
 
-    internal Keep GetById(int id)
+    internal Item GetById(int id)
     {
       var exists = _repo.GetById(id);
       if (exists == null)
@@ -54,17 +54,17 @@ namespace Keepr.Services
       return "Successfully Destroyed";
     }
 
-    internal IEnumerable<Keep> GetMyKeeps(string userId)
+    internal IEnumerable<Item> GetMyItems(string userId)
     {
-      var exists = _repo.GetMyKeeps(userId);
+      var exists = _repo.GetMyItems(userId);
       if (exists == null)
       {
-        throw new Exception("You have no keeps");
+        throw new Exception("You have no items");
       }
       return exists;
     }
 
-    internal string Edit(Keep update)
+    internal string Edit(Item update)
     {
       var exists = GetById(update.Id);
       if (exists == null)
@@ -73,7 +73,7 @@ namespace Keepr.Services
       }
       else if (update.UserId != exists.UserId)
       {
-        throw new Exception("You do not own this Keep peasant!");
+        throw new Exception("You do not own this item peasant!");
       }
       _repo.Edit(update);
       return "Successfully Updated";
