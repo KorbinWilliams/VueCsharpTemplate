@@ -12,6 +12,7 @@
 *.appsettings.*
 *.appsettings.json
 *.appsettings.Development.json
+# gitignore might not ignore the appsettings. Was having problems with it.
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
